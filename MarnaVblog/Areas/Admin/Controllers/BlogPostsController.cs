@@ -100,12 +100,32 @@ namespace MarnaVblog.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var blogPost = await _context.BlogPosts.FindAsync(id);
+            var blogPost = await _blogPostService.GetBlogPostAsync(id.Value);
             if (blogPost == null)
             {
                 return NotFound();
             }
-            return View(blogPost);
+            var tags = await _tagService.GetAllTagsAsync();
+            var model = new EditBlogPostViewModel
+            {
+                Author = blogPost.Author,
+                Content = blogPost.Content,
+                FeatureImageUrl = blogPost.FeatureImageUrl,
+                PageTitle = blogPost.PageTitle,
+                Heading = blogPost.Heading,
+                Id = blogPost.Id,
+                PublisheDate = blogPost.PublisheDate,
+                ShortDescrption = blogPost.ShortDescrption,
+                UrlHandle = blogPost.UrlHandle,
+                Visible = blogPost.Visible,
+                Tags = tags.Select(x => new SelectListItem
+                {
+                    Text = x.Name, Value = x.Id.ToString()
+                }),
+                SelectedTags = blogPost.Tags.Select(x => x.Id.ToString()).ToArray()
+            };
+
+            return View(model);
         }
 
         // POST: Admin/BlogPosts/Edit/5

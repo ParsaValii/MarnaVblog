@@ -24,9 +24,9 @@ namespace Services.Services
             return await _context.BlogPosts.Include(x => x.Tags).ToListAsync();
         }
 
-        public async Task<BlogPost> GetBlogPostAsync(Guid id)
+        public async Task<BlogPost> GetBlogPostAsync(Guid Id)
         {
-            var BlogPost = await _context.BlogPosts.FindAsync(id);
+            var BlogPost = await _context.BlogPosts.Include(x => x.Tags).FirstOrDefaultAsync(x => x.Id == Id);
             return BlogPost;
         }
 
