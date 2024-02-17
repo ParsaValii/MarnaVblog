@@ -21,7 +21,7 @@ namespace Services.Services
 
         public async Task<IEnumerable<BlogPost>> GetAllBlogPostsAsync()
         {
-            return await _context.BlogPosts.ToListAsync();
+            return await _context.BlogPosts.Include(x => x.Tags).ToListAsync();
         }
 
         public async Task<BlogPost> GetBlogPostAsync(Guid id)

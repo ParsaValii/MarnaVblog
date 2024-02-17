@@ -25,7 +25,7 @@ namespace MarnaVblog.Areas.Admin.Controllers
         // GET: Admin/BlogPosts
         public async Task<IActionResult> Index()
         {
-            return View(await _context.BlogPosts.ToListAsync());
+            return View(await _blogPostService.GetAllBlogPostsAsync());
         }
 
         // GET: Admin/BlogPosts/Details/5
