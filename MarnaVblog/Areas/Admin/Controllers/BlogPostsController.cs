@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Domain;
 using Domain.Entities;
+using Services.Interfaces;
+using Domain.Entities.ViewModels;
 
 namespace MarnaVblog.Areas.Admin.Controllers
 {
@@ -14,10 +16,12 @@ namespace MarnaVblog.Areas.Admin.Controllers
     public class BlogPostsController : Controller
     {
         private readonly MarnaDbContext _context;
+        private ITagService _tagService;
 
-        public BlogPostsController(MarnaDbContext context)
+        public BlogPostsController(MarnaDbContext context, ITagService tagService)
         {
             _context = context;
+            _tagService = tagService;
         }
 
         // GET: Admin/BlogPosts
@@ -45,9 +49,14 @@ namespace MarnaVblog.Areas.Admin.Controllers
         }
 
         // GET: Admin/BlogPosts/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            return View();
+            var tags = await _tagService.GetAllTagsAsync();
+            var model = new BlogPostViewModel 
+            {
+                Tags = tags.Select(m => new SelectListItem {Text=m.DisplayName, Value = m.Id.ToString() })
+            };
+            return View(model);
         }
 
         // POST: Admin/BlogPosts/Create
@@ -55,16 +64,9 @@ namespace MarnaVblog.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Heading,PageTitle,Content,ShortDescrption,FeatureImageUrl,UrlHandle,PublisheDate,Author,Visible")] BlogPost blogPost)
+        public async Task<IActionResult> Create(BlogPostViewModel blogPostViewModel)
         {
-            if (ModelState.IsValid)
-            {
-                blogPost.Id = Guid.NewGuid();
-                _context.Add(blogPost);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(blogPost);
+            return RedirectToAction();
         }
 
         // GET: Admin/BlogPosts/Edit/5
