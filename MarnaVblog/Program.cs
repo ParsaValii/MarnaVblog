@@ -12,6 +12,7 @@ builder.Services.AddDbContext<MarnaDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("VblogMarnaDbContext")));
 
 builder.Services.AddScoped<ITagService, TagService>();
+builder.Services.AddScoped<IBlogPostService, BlogPostService>();
 
 var app = builder.Build();
 

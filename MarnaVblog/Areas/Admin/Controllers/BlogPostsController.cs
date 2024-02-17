@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Domain;
+using Domain.Entities;
+using Domain.Entities.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Domain;
-using Domain.Entities;
 using Services.Interfaces;
-using Domain.Entities.ViewModels;
 
 namespace MarnaVblog.Areas.Admin.Controllers
 {
@@ -17,11 +13,13 @@ namespace MarnaVblog.Areas.Admin.Controllers
     {
         private readonly MarnaDbContext _context;
         private ITagService _tagService;
+        private IBlogPostService _blogPostService;
 
-        public BlogPostsController(MarnaDbContext context, ITagService tagService)
+        public BlogPostsController(MarnaDbContext context, ITagService tagService, IBlogPostService blogPostService)
         {
             _context = context;
             _tagService = tagService;
+            _blogPostService = blogPostService;
         }
 
         // GET: Admin/BlogPosts
@@ -66,7 +64,32 @@ namespace MarnaVblog.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(BlogPostViewModel blogPostViewModel)
         {
-            return RedirectToAction();
+            var SelectedTags = new List<Tag>();
+            foreach (var selectedtag in blogPostViewModel.SelectedTags)
+            {
+                var selectedTagId = Guid.Parse(selectedtag);
+                var existingtag = await _tagService.GetTagAsync(selectedTagId);
+                if (existingtag != null)
+                {
+                    SelectedTags.Add(existingtag);
+                }
+            }
+            var blogPost = new BlogPost
+            {
+                Heading = blogPostViewModel.Heading,
+                Author = blogPostViewModel.Author,
+                Content = blogPostViewModel.Content,
+                FeatureImageUrl = blogPostViewModel.FeatureImageUrl,
+                PageTitle = blogPostViewModel.PageTitle,
+                PublisheDate = blogPostViewModel.PublisheDate,
+                ShortDescrption = blogPostViewModel.ShortDescrption,
+                UrlHandle = blogPostViewModel.UrlHandle,
+                Visible = blogPostViewModel.Visible,
+                Tags = SelectedTags
+            };
+            await _blogPostService.InsertBlogPostAsync(blogPost);
+            await _blogPostService.SaveAsync();
+            return RedirectToAction("Index");
         }
 
         // GET: Admin/BlogPosts/Edit/5

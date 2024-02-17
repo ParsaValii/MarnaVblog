@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Domain.Migrations
 {
     [DbContext(typeof(MarnaDbContext))]
-    [Migration("20240216162208_FirstMigration")]
+    [Migration("20240217131815_FirstMigration")]
     partial class FirstMigration
     {
         /// <inheritdoc />
