@@ -1,6 +1,7 @@
 using Domain;
 using Microsoft.EntityFrameworkCore;
 using Services.Interfaces;
+using Services.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,7 +11,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<MarnaDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("VblogMarnaDbContext")));
 
-builder.Services.AddScoped<ITagService, ITagService>();
+builder.Services.AddScoped<ITagService, TagService>();
 
 var app = builder.Build();
 
