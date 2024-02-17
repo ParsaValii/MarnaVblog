@@ -19,6 +19,6 @@ namespace Services.Interfaces
 
         Task<Tag?> DeleteTagAsynce(Guid id);
         Tag? DeleteTagAsynce(Tag tag);
-        Task Save();
+        Task SaveAsync();
     }
 }

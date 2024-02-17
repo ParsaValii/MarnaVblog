@@ -14,6 +14,6 @@ namespace Domain.Entities
 
         public string DisplayName { get; set; }
 
-        public ICollection<BlogPost> BlogPosts { get; set; }
+        public ICollection<BlogPost>? BlogPosts { get; set; }
     }
 }

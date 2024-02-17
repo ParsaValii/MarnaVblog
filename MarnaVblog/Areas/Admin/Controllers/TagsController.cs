@@ -7,23 +7,26 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Domain;
 using Domain.Entities;
+using Services.Interfaces;
+using Services.Services;
 
 namespace MarnaVblog.Areas.Admin.Controllers
 {
     [Area("Admin")]
     public class TagsController : Controller
     {
-        private readonly MarnaDbContext _context;
+        private readonly MarnaDbContext _context = new MarnaDbContext();
+        private readonly ITagService _tagService;
 
-        public TagsController(MarnaDbContext context)
+        public TagsController(ITagService tagService)
         {
-            _context = context;
+            _tagService = new TagService(_context);
         }
 
         // GET: Admin/Tags
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Tags.ToListAsync());
+            return View(await _tagService.GetAllTagsAsync());
         }
 
         // GET: Admin/Tags/Details/5
@@ -34,8 +37,7 @@ namespace MarnaVblog.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var tag = await _context.Tags
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var tag = await _tagService.GetTagAsync(id.Value);
             if (tag == null)
             {
                 return NotFound();
@@ -60,8 +62,8 @@ namespace MarnaVblog.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 tag.Id = Guid.NewGuid();
-                _context.Add(tag);
-                await _context.SaveChangesAsync();
+                await _tagService.InsertTagAsync(tag);
+                await _tagService.SaveAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(tag);
@@ -75,7 +77,7 @@ namespace MarnaVblog.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var tag = await _context.Tags.FindAsync(id);
+            var tag = await _tagService.GetTagAsync(id.Value);
             if (tag == null)
             {
                 return NotFound();
@@ -99,8 +101,8 @@ namespace MarnaVblog.Areas.Admin.Controllers
             {
                 try
                 {
-                    _context.Update(tag);
-                    await _context.SaveChangesAsync();
+                    _tagService.UpdateTagAsynce(tag);
+                    await _tagService.SaveAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -126,8 +128,7 @@ namespace MarnaVblog.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var tag = await _context.Tags
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var tag = await _tagService.GetTagAsync(id.Value);
             if (tag == null)
             {
                 return NotFound();
@@ -141,13 +142,13 @@ namespace MarnaVblog.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var tag = await _context.Tags.FindAsync(id);
+            var tag = await _tagService.GetTagAsync(id);
             if (tag != null)
             {
-                _context.Tags.Remove(tag);
+                _tagService.DeleteTagAsynce(tag);
             }
 
-            await _context.SaveChangesAsync();
+            await _tagService.SaveAsync();
             return RedirectToAction(nameof(Index));
         }
 
