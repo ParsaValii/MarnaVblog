@@ -77,4 +77,7 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        var editor = new FroalaEditor('#Content')
+    </script>
 }
