@@ -1,0 +1,75 @@
+﻿@model Domain.Entities.BlogPost
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Edit</h1>
+
+<h4>BlogPost</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="Heading" class="control-label"></label>
+                <input asp-for="Heading" class="form-control" />
+                <span asp-validation-for="Heading" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PageTitle" class="control-label"></label>
+                <input asp-for="PageTitle" class="form-control" />
+                <span asp-validation-for="PageTitle" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Content" class="control-label"></label>
+                <input asp-for="Content" class="form-control" />
+                <span asp-validation-for="Content" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ShortDescrption" class="control-label"></label>
+                <input asp-for="ShortDescrption" class="form-control" />
+                <span asp-validation-for="ShortDescrption" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FeatureImageUrl" class="control-label"></label>
+                <input asp-for="FeatureImageUrl" class="form-control" />
+                <span asp-validation-for="FeatureImageUrl" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UrlHandle" class="control-label"></label>
+                <input asp-for="UrlHandle" class="form-control" />
+                <span asp-validation-for="UrlHandle" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PublisheDate" class="control-label"></label>
+                <input asp-for="PublisheDate" class="form-control" />
+                <span asp-validation-for="PublisheDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Author" class="control-label"></label>
+                <input asp-for="Author" class="form-control" />
+                <span asp-validation-for="Author" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Visible" /> @Html.DisplayNameFor(model => model.Visible)
+                </label>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
