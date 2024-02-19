@@ -1,5 +1,6 @@
 using MarnaVblog.Models;
 using Microsoft.AspNetCore.Mvc;
+using Services.Interfaces;
 using System.Diagnostics;
 
 namespace MarnaVblog.Controllers
@@ -8,14 +9,18 @@ namespace MarnaVblog.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public IBlogPostService _blogPostService;
+
+        public HomeController(ILogger<HomeController> logger, IBlogPostService blogPostService)
         {
             _logger = logger;
+            _blogPostService = blogPostService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var blogs = await _blogPostService.GetAllBlogPostsAsync();
+            return View(blogs);
         }
 
         public IActionResult Privacy()
