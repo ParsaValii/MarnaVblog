@@ -1,4 +1,5 @@
 using Domain;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Services.Interfaces;
 using Services.Services;
@@ -10,6 +11,11 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<MarnaDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("VblogMarnaDbContext")));
+
+builder.Services.AddDbContext<AuthDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("MarnaVblogAuthDbConnectionString")));
+
+builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<AuthDbContext>();
 
 builder.Services.AddScoped<ITagService, TagService>();
 builder.Services.AddScoped<IBlogPostService, BlogPostService>();
@@ -28,6 +34,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
